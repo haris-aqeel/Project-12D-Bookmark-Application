@@ -10,6 +10,7 @@ const typeDefs = gql`
   }
   type Bookmark{
     id: ID!
+    title: String!
     url: String!
     desc: String!
     createdAt: String!
@@ -17,7 +18,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addBookmark(url: String!, desc: String!, createdAt: String!) : Bookmark
+    addBookmark(url: String!, desc: String!, createdAt: String!, title: String!) : Bookmark
     removeBookmark(id: ID!): Bookmark
   }
 `
@@ -45,6 +46,7 @@ const resolvers = {
             id: d.ref.id,
             url: d.data.url,
             desc: d.data.desc,
+            title: d.data.title,
             createdAt: d.data.createdAt
           }
         })
@@ -54,7 +56,7 @@ const resolvers = {
       }}},
 
       Mutation: {
-        addBookmark: async (_, {url,desc, createdAt}) => {
+        addBookmark: async (_, {url,desc, createdAt, title}) => {
 
           try {
             var client = new faunadb.Client({ secret: "fnAD6rJnx9ACBQ1NMbazmV_N2EkfjmhsVBXGybaB" });
@@ -64,6 +66,7 @@ const resolvers = {
                 { data: { 
                   url,
                   desc,
+                  title,
                   createdAt
                  } },
               )
